@@ -1,12 +1,38 @@
-import phaser from "phaser";
+import Phaser from "phaser";
 
 
-class Cell extends phaser.GameObjects.Sprite {
+export default class extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, radius, color) {
-        this.graphics = scene.add.graphics({'add': 'false'});
-        this.graphics.fillCircle(radius, radius, radius);
-        this.textureKey = radius + color;
-        this.texture = graphics.generateTexture(this.textureKey, radius*2, radius*2);
-        super(scene, x, y, this.textureKey);
-    } 
+        let textureKey = `${radius} ${color}`;
+
+        let graphics = scene.add.graphics();
+        graphics.fillStyle(color, 1.0);
+        graphics.fillCircle(radius, radius, radius);
+        graphics.generateTexture(textureKey, radius*2, radius*2);
+        graphics.visible = false;
+
+        super(scene, x, y, textureKey);
+
+        this.scene = scene;
+        this.scene.add.existing(this);
+
+        this.body.collideWorldBounds = true;
+    }
+    changeDirection(direction) {
+        let directions = {
+            'N': -90,
+            'S': 90,
+            'E': 0,
+            'W': 180,
+            'NE': -45,
+            'NW': -135,
+            'SE': 45,
+            'SW': 135,
+        };
+        this.scene.physics.velocityFromAngle(
+            directions[direction], 
+            this.speed, 
+            this.body.velocity,
+        );
+    }
 }
