@@ -38,8 +38,12 @@ mainScene.create = function()
         lineThickness: 5,
         lineColor: 0xff00ff,
     },this);
+
     this.cell = new Cell(this, 400, 300, 50, 0x6666ff);
-    this.cursor = this.input.activePointer;
+    this.cursor = new Phaser.Math.Vector2(0, 0);
+    this.input.on('pointermove', function(pointer) {
+        this.cursor.set(pointer.x, pointer.y);
+    }, this);
     this.cameras.main.startFollow(this.cell, true);
     console.log(this.cell);
 }
