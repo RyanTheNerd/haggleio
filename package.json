@@ -1,6 +1,6 @@
 {
   "name": "haggleio",
-  "version": "1.0",
+  "version": "0.0.1",
   "description": "Agario clone in phaser 3",
   "main": "src/index.js",
   "scripts": {

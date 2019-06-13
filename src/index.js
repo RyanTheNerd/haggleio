@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import Cell from './cell';
+import generateBackground from './background';
 
 let mainScene = new Phaser.Scene('main');
 
@@ -9,10 +10,15 @@ var config = {
     height: 600,
     resolution: window.devicePixelRatio,
     scene: mainScene,
+    scale: {
+        mode: Phaser.Scale.RESIZE,
+        width: 800,
+        height:600,
+    },
     physics: {
         default: 'arcade',
         arcade: {
-            debug: false,
+            debug: true,
             fps: 60,
         }
     }
@@ -25,24 +31,30 @@ mainScene.preload = function()
 
 mainScene.create = function()
 {
-    this.cell = new Cell(this, 400, 300, 50, 0xff00ff);
-    this.keys = this.input.keyboard.createCursorKeys();
+    generateBackground({
+        columns: 50,
+        rows: 50,
+        lineSpacing: 100,
+        lineThickness: 5,
+        lineColor: 0xff00ff,
+    },this);
+    this.cell = new Cell(this, 400, 300, 50, 0x6666ff);
+    this.cursor = this.input.activePointer;
+    this.cameras.main.startFollow(this.cell, true);
     console.log(this.cell);
 }
 
 mainScene.update = function() 
 {
-    if (this.keys.up) {
-        this.cell.changeDirection("N");
+    let camera = this.cameras.main;
+    let center = new Phaser.Math.Vector2(camera.centerX, camera.centerY);
+    if (Phaser.Math.Distance.BetweenPoints(center, this.cursor) > 5) {
+        let angle = Phaser.Math.Angle.BetweenPoints(center, this.cursor);
+        this.cell.changeDirection(angle*180/Math.PI);
     }
-    else if (this.keys.down) {
-        this.cell.changeDirection("S");
-    }
-    if (this.keys.left) {
-        this.cell.changeDirection("W");
-    }
-    else if (this.keys.right) {
-        this.cell.changeDirection("E"); 
-    }
+}
+
+Phaser.Math.Distance.BetweenPoints = function(point1, point2) {
+    return Phaser.Math.Distance.Between(point1.x, point1.y, point2.x, point2.y);
 }
 var game = new Phaser.Game(config);

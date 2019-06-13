@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 
 
-export default class extends Phaser.Physics.Arcade.Sprite {
+export default class extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y, radius, color) {
         let textureKey = `${radius} ${color}`;
 
@@ -15,22 +15,14 @@ export default class extends Phaser.Physics.Arcade.Sprite {
 
         this.scene = scene;
         this.scene.add.existing(this);
+        this.scene.physics.world.enable(this);
 
         this.body.collideWorldBounds = true;
+        this.speed = 300;
     }
-    changeDirection(direction) {
-        let directions = {
-            'N': -90,
-            'S': 90,
-            'E': 0,
-            'W': 180,
-            'NE': -45,
-            'NW': -135,
-            'SE': 45,
-            'SW': 135,
-        };
+    changeDirection(angle) {
         this.scene.physics.velocityFromAngle(
-            directions[direction], 
+            angle, 
             this.speed, 
             this.body.velocity,
         );
