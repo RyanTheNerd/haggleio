@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import Cell from './cell';
 import generateBackground from './background';
+import FoodGroup from './food';
 
 let mainScene = new Phaser.Scene('main');
 
@@ -40,12 +41,16 @@ mainScene.create = function()
     },this);
 
     this.cell = new Cell(this, 400, 300, 50, 0x6666ff);
+    this.food = new FoodGroup(this, 150);
+
+
     this.cursor = new Phaser.Math.Vector2(0, 0);
     this.input.on('pointermove', function(pointer) {
         this.cursor.set(pointer.x, pointer.y);
     }, this);
+
     this.cameras.main.startFollow(this.cell, true);
-    console.log(this.cell);
+
 }
 
 mainScene.update = function() 

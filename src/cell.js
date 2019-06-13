@@ -1,17 +1,11 @@
 import Phaser from "phaser";
+import genCircleTexture from "./utils";
 
 
-export default class extends Phaser.GameObjects.Sprite {
+export default class Cell extends Phaser.GameObjects.Ellipse {
     constructor(scene, x, y, radius, color) {
-        let textureKey = `${radius} ${color}`;
-
-        let graphics = scene.add.graphics();
-        graphics.fillStyle(color, 1.0);
-        graphics.fillCircle(radius, radius, radius);
-        graphics.generateTexture(textureKey, radius*2, radius*2);
-        graphics.visible = false;
-
-        super(scene, x, y, textureKey);
+        let textureKey = genCircleTexture(scene, radius, color); 
+        super(scene, x, y, radius*2, radius*2, color);
 
         this.scene = scene;
         this.scene.add.existing(this);
