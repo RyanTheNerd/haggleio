@@ -33,8 +33,8 @@ mainScene.preload = function()
 mainScene.create = function()
 {
     generateBackground({
-        columns: 50,
-        rows: 50,
+        columns: 100,
+        rows: 25,
         lineSpacing: 100,
         lineThickness: 5,
         lineColor: 0xff00ff,
@@ -44,6 +44,7 @@ mainScene.create = function()
     this.food = new FoodGroup(this, 150);
 
 
+    this.keys = this.input.keyboard.createCursorKeys();
     this.cursor = new Phaser.Math.Vector2(0, 0);
     this.input.on('pointermove', function(pointer) {
         this.cursor.set(pointer.x, pointer.y);
@@ -57,10 +58,11 @@ mainScene.update = function()
 {
     let camera = this.cameras.main;
     let center = new Phaser.Math.Vector2(camera.centerX, camera.centerY);
-    if (Phaser.Math.Distance.BetweenPoints(center, this.cursor) > 5) {
-        let angle = Phaser.Math.Angle.BetweenPoints(center, this.cursor);
-        this.cell.changeDirection(angle*180/Math.PI);
-    }
+    // if (Phaser.Math.Distance.BetweenPoints(center, this.cursor) > 5) {
+    //     let angle = Phaser.Math.Angle.BetweenPoints(center, this.cursor);
+    //     this.cell.changeDirection(angle*180/Math.PI);
+    // }
+    this.cell.handleCursorKeys(this.keys, 0.5);
 }
 
 Phaser.Math.Distance.BetweenPoints = function(point1, point2) {

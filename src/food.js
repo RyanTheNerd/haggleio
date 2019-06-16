@@ -30,7 +30,7 @@ export default class FoodGroup extends Phaser.GameObjects.Group {
             food.destroy();
             cell.setScale(cell.scaleX + 0.1);
             let camera = this.scene.cameras.main;
-            camera.zoomTo(camera.zoom * 0.95);
+            camera.zoomTo(camera.zoom * 0.97);
         }, null, this);
     }
 }
