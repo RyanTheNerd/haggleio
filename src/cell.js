@@ -16,6 +16,7 @@ export default class Cell extends Phaser.GameObjects.Ellipse {
         this.scene = scene;
         this.scene.add.existing(this);
         this.scene.physics.world.enable(this);
+        this.body.setCircle(radius);
 
         this.body.collideWorldBounds = true;
         this.setAngle(180);
@@ -26,7 +27,8 @@ export default class Cell extends Phaser.GameObjects.Ellipse {
             baseSpeed: BASE_SPEED,
             acceleration: FORWARD_ACCEL,
             boostRate: BOOST_RATE,
-            boostPotential: 1000,
+            boostPotential: 2000,
+            boostMaxPotential:2000,
             velocity: 0,
             drag: 5,
         });

@@ -14,8 +14,9 @@ export default class ForwardVelocity {
         this.baseAcceleration = config.acceleration;
         this.acceleration = 0;
         this.value = config.velocity;
-        this.maxSpeed = 1000;
+        this.maxSpeed = 1500;
         this.speed = Math.abs(config.velocity);
+        this.boostMaxPotential = config.boostMaxPotential;
         this.boostRate = config.boostRate;
         this.boostPotential = config.boostPotential;
         this.drag = config.drag;
@@ -46,21 +47,25 @@ export default class ForwardVelocity {
         this.speed = Math.abs(this.value);
     }
     changeVelocity(velocity) {
-        this.value += velocity;
-        this.speed = Math.abs(this.value);
+        this.setVelocity(this.value + velocity);
     }
     changeSpeed(speed) {
         if(this.value >= 0) {
-            this.value += speed;
+            this.changeVelocity(speed);
         }
         else {
-            this.value -= speed;
+            this.changeVelocity(-speed);
         }
-        this.speed = Math.abs(this.value);
+    }
+    setSpeed(speed) {
+        this.changeSpeed(speed - this.speed);
     }
     update() {
-        if(this.speed < this.baseSpeed) {
+        if(this.speed < this.baseSpeed && this.speed + Math.abs(this.acceleration) < this.baseSpeed) {
             this.changeVelocity(this.acceleration);
+        }
+        else if(this.speed > this.maxSpeed) {
+            this.setSpeed(this.maxSpeed);
         }
         if(this.speed > this.drag) {
             this.changeSpeed(-this.drag);

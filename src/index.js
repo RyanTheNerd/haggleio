@@ -60,11 +60,11 @@ mainScene.update = function()
     let center = new Phaser.Math.Vector2(camera.centerX, camera.centerY);
     this.cell.handleCursorKeys(this.keys);
     this.cell.update(this.keys);
-    if(this.cell.body.speed > this.cell.baseSpeed) {
-        camera.zoomTo((this.cell.baseSpeed/this.cell.body.speed), 100);
+    if(this.cell.velocity.speed > this.cell.velocity.baseSpeed) {
+        camera.zoomTo(Math.sqrt(this.cell.velocity.baseSpeed/this.cell.velocity.speed), 100);
     }
     else {
-        camera.zoomTo(1, 100);
+        camera.zoom = 1;
     }
 }
 
