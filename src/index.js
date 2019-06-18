@@ -41,7 +41,7 @@ mainScene.create = function()
     },this);
 
     this.cell = new Cell(this, 400, 300, 50, 0x6666ff);
-    this.food = new FoodGroup(this, 150);
+    this.food = new FoodGroup(this, 25);
 
 
     this.keys = this.input.keyboard.createCursorKeys();
@@ -58,11 +58,14 @@ mainScene.update = function()
 {
     let camera = this.cameras.main;
     let center = new Phaser.Math.Vector2(camera.centerX, camera.centerY);
-    // if (Phaser.Math.Distance.BetweenPoints(center, this.cursor) > 5) {
-    //     let angle = Phaser.Math.Angle.BetweenPoints(center, this.cursor);
-    //     this.cell.changeDirection(angle*180/Math.PI);
-    // }
-    this.cell.handleCursorKeys(this.keys, 0.5);
+    this.cell.handleCursorKeys(this.keys);
+    this.cell.update(this.keys);
+    if(this.cell.body.speed > this.cell.baseSpeed) {
+        camera.zoomTo((this.cell.baseSpeed/this.cell.body.speed), 100);
+    }
+    else {
+        camera.zoomTo(1, 100);
+    }
 }
 
 Phaser.Math.Distance.BetweenPoints = function(point1, point2) {

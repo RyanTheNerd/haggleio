@@ -1,5 +1,12 @@
 import Phaser from "phaser";
-import genCircleTexture from "./utils";
+import Velocity from './forwardVelocity';
+
+const FORWARD_ACCEL = 20;
+const ANGULAR_VELOCITY = 180;
+const BASE_SPEED = 600;
+const BOOST_RATE = 10;
+const ANGULAR_DRAG = 500;
+
 
 
 export default class Cell extends Phaser.GameObjects.Ellipse {
@@ -11,43 +18,41 @@ export default class Cell extends Phaser.GameObjects.Ellipse {
         this.scene.physics.world.enable(this);
 
         this.body.collideWorldBounds = true;
-        this.angle = 180;
-        this.angularVelocity = 0;
-        this.angularDrag = 0.3;
-        this.baseSpeed = 300;
-        this.potentialBoost = 100;
-        this.boostRate = 10;
+        this.setAngle(180);
+        this.body.angularVelocity = 0;
+        this.body.angularDrag = ANGULAR_DRAG;
+        this.body.setAllowRotation();
+        this.velocity = new Velocity({
+            baseSpeed: BASE_SPEED,
+            acceleration: FORWARD_ACCEL,
+            boostRate: BOOST_RATE,
+            boostPotential: 1000,
+            velocity: 0,
+            drag: 5,
+        });
     }
-    changeDirection(angle) {
-        if(this.potentialBoost > this.boostRate) {
-            this.potentialBoost -= this.boostRate;
-            this.speed += this.boostRate;
-        }
-        if(this.speed >= this.baseSpeed) {
-
-            this.speed -= this.drag;
-        }
+    changeDirection() {
         this.scene.physics.velocityFromAngle(
-            angle, 
-            this.speed, 
+            this.body.rotation, 
+            this.velocity.value, 
             this.body.velocity,
         );
     }
-    handleCursorKeys(keys, angle) {
+    handleCursorKeys(keys) {
+
         if(keys.left.isDown) {
-            this.angularVelocity -= angle;
+            this.body.setAngularVelocity(-ANGULAR_VELOCITY);
         }
         else if(keys.right.isDown) {
-            this.angularVelocity += angle;
+            this.body.setAngularVelocity(ANGULAR_VELOCITY);
         }
-        this.angularVelocity += this.angularVelocity > 0 ? -this.angularDrag : this.angularDrag;
-        this.angle += this.angularVelocity;
 
-        if(keys.up.isDown) {
-            this.changeDirection(this.angle);
-        }
-        else if(keys.down.isDown) {
-            this.changeDirection(this.angle + 180);
-        }
+        this.velocity.handleKeys(keys);
+        this.changeDirection();
+
+    }
+    update(keys) {
+        this.velocity.update();
+        this.handleCursorKeys(keys);
     }
 }

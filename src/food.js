@@ -14,23 +14,29 @@ export default class FoodGroup extends Phaser.GameObjects.Group {
     constructor(scene, foodCount) {
         super(scene);
 
-        let bounds = scene.physics.world.bounds;
+        this.scene = scene;
+        this.bounds = scene.physics.world.bounds;
 
-        for(let i = 0; i < foodCount; i++) {
-            let x = Phaser.Math.Between(0, bounds.width);
-            let y = Phaser.Math.Between(0, bounds.height);
-            let color = Phaser.Display.Color.HSVToRGB(Math.random(), 1, 1).color;
-            let food = new Food(scene, x, y, 15, color);
-            this.add(food);
-        }
+        this.foodCount = foodCount;
+        this.addFood();
         scene.add.existing(this);
         this.scene.physics.world.enable(this);
 
         this.scene.physics.add.collider(this, this.scene.cell, function(food, cell) {
             food.destroy();
-            cell.setScale(cell.scaleX + 0.1);
+            cell.velocity.boostPotential += cell.velocity.boostRate * 50;
             let camera = this.scene.cameras.main;
-            camera.zoomTo(camera.zoom * 0.97);
+            
+            this.addFood();
         }, null, this);
+    }
+    addFood() {
+        for(let i = this.countActive(); i < this.foodCount; i++) {
+            let x = Phaser.Math.Between(0, this.bounds.width);
+            let y = Phaser.Math.Between(0, this.bounds.height);
+            let color = Phaser.Display.Color.HSVToRGB(Math.random(), 1, 1).color;
+            let food = new Food(this.scene, x, y, 15, color);
+            this.add(food);
+        }
     }
 }
