@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import Cell from './cell';
 import generateBackground from './background';
 import FoodGroup from './food';
+import Ball from "./ball";
 
 let mainScene = new Phaser.Scene('main');
 
@@ -42,7 +43,7 @@ mainScene.create = function()
 
     this.cell = new Cell(this, 400, 300, 50, 0x6666ff);
     this.food = new FoodGroup(this, 25);
-
+    this.ball = new Ball(this, 75, 0x00ffff);
 
     this.keys = this.input.keyboard.createCursorKeys();
     this.cursor = new Phaser.Math.Vector2(0, 0);
