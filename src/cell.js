@@ -41,12 +41,16 @@ export default class Cell extends Phaser.GameObjects.Ellipse {
         );
     }
     handleCursorKeys(keys) {
+        let angularVelocity = ANGULAR_VELOCITY;
+        if(keys.shift.isDown) {
+            angularVelocity *= 1.50; 
+        }
 
         if(keys.left.isDown) {
-            this.body.setAngularVelocity(-ANGULAR_VELOCITY);
+            this.body.setAngularVelocity(-angularVelocity);
         }
         else if(keys.right.isDown) {
-            this.body.setAngularVelocity(ANGULAR_VELOCITY);
+            this.body.setAngularVelocity(angularVelocity);
         }
 
         this.velocity.handleKeys(keys);
