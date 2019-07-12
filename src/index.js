@@ -40,6 +40,8 @@ mainScene.create = function()
         lineColor: 0xff00ff,
     },this);
 
+    //this.physics.world.setBounds(0, 0, 100*100, 100*25);
+
     this.cell = new Cell(this, 400, 300, 50, 0x6666ff);
     this.food = new FoodGroup(this, 25);
 
