@@ -1,37 +1,41 @@
-import genCircleTexture from './utils';
+import Circle from './circle';
 
-class Food extends Phaser.GameObjects.Sprite {
+class Food extends Circle {
     constructor(scene, x, y, radius, color) {
-        let textureKey = genCircleTexture(scene, radius, color); 
-        super(scene, x, y, textureKey);
+        super(scene, x, y, radius, color);
 
         this.scene = scene;
         this.scene.physics.world.enable(this);
         this.scene.add.existing(this);
+    }
+    dieAndRespawn(bounds) {
+        let rand = (bound) => Phaser.Math.Between(0, bound);
+        this.setPosition(rand(bounds.x), rand(bounds.y));
     }
 }
 export default class FoodGroup extends Phaser.GameObjects.Group {
     constructor(scene, foodCount) {
         super(scene);
 
+        // Assign arguments to 'this'
         this.scene = scene;
         this.bounds = scene.physics.world.bounds;
-
         this.foodCount = foodCount;
+
+        // Generate the food and add it to the world
         this.addFood();
         scene.add.existing(this);
         this.scene.physics.world.enable(this);
 
         this.scene.physics.add.collider(this, this.scene.cell, function(food, cell) {
-            food.destroy();
+            food.dieAndRespawn(this.bounds);
             cell.velocity.boostPotential += cell.velocity.boostRate * 50;
             let camera = this.scene.cameras.main;
             
-            this.addFood();
         }, null, this);
     }
     addFood() {
-        for(let i = this.countActive(); i < this.foodCount; i++) {
+        for(let i = 0; i < this.foodCount; i++) {
             let x = Phaser.Math.Between(0, this.bounds.width);
             let y = Phaser.Math.Between(0, this.bounds.height);
             let color = Phaser.Display.Color.HSVToRGB(Math.random(), 1, 1).color;
