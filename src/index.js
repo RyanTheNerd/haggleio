@@ -41,11 +41,20 @@ mainScene.create = function()
         lineColor: 0xff00ff,
     },this);
 
+    //this.physics.world.setBounds(0, 0, 100*100, 100*25);
+
     this.cell = new Cell(this, 400, 300, 50, 0x6666ff);
     this.food = new FoodGroup(this, 25);
     this.ball = new Ball(this, 75, 0x00ffff);
 
-    this.keys = this.input.keyboard.createCursorKeys();
+    this.keys = this.input.keyboard.addKeys({
+        'up': Phaser.Input.Keyboard.KeyCodes.W,
+        'down': Phaser.Input.Keyboard.KeyCodes.S,
+        'left': Phaser.Input.Keyboard.KeyCodes.A,
+        'right': Phaser.Input.Keyboard.KeyCodes.D,
+        'space': Phaser.Input.Keyboard.KeyCodes.SPACE,
+        'shift': Phaser.Input.Keyboard.KeyCodes.SHIFT,
+    });
     this.cursor = new Phaser.Math.Vector2(0, 0);
     this.input.on('pointermove', function(pointer) {
         this.cursor.set(pointer.x, pointer.y);
@@ -62,10 +71,7 @@ mainScene.update = function()
     this.cell.handleCursorKeys(this.keys);
     this.cell.update(this.keys);
     if(this.cell.velocity.speed > this.cell.velocity.baseSpeed) {
-        camera.zoomTo(Math.sqrt(this.cell.velocity.baseSpeed/this.cell.velocity.speed), 100);
-    }
-    else {
-        camera.zoom = 1;
+        camera.zoomTo(Math.sqrt(this.cell.velocity.baseSpeed/this.cell.velocity.speed) + 0.1, 100);
     }
 }
 

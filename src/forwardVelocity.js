@@ -26,10 +26,13 @@ export default class ForwardVelocity {
             this.acceleration = this.baseAcceleration;
         }
         else if(keys.down.isDown) {
-            this.acceleration = - this.baseAcceleration;
+            this.acceleration = -this.baseAcceleration;
         }
         else {
             this.acceleration = 0;
+        }
+        if(keys.shift.isDown) {
+            this.changeSpeed(-this.baseSpeed*0.05);
         }
 
         if(keys.space.isDown) {

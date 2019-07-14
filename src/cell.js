@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import Circle from "./circle";
 import Velocity from './forwardVelocity';
 
 const FORWARD_ACCEL = 20;
@@ -9,16 +10,10 @@ const ANGULAR_DRAG = 500;
 
 
 
-export default class Cell extends Phaser.GameObjects.Ellipse {
+export default class Cell extends Circle {
     constructor(scene, x, y, radius, color) {
-        super(scene, x, y, radius*2, radius*2, color);
+        super(scene, x, y, radius, color);
 
-        this.scene = scene;
-        this.scene.add.existing(this);
-        this.scene.physics.world.enable(this);
-        this.body.setCircle(radius);
-
-        this.body.collideWorldBounds = true;
         this.setAngle(180);
         this.body.angularVelocity = 0;
         this.body.angularDrag = ANGULAR_DRAG;
@@ -41,12 +36,16 @@ export default class Cell extends Phaser.GameObjects.Ellipse {
         );
     }
     handleCursorKeys(keys) {
+        let angularVelocity = ANGULAR_VELOCITY;
+        if(keys.shift.isDown) {
+            angularVelocity *= 1.50; 
+        }
 
         if(keys.left.isDown) {
-            this.body.setAngularVelocity(-ANGULAR_VELOCITY);
+            this.body.setAngularVelocity(-angularVelocity);
         }
         else if(keys.right.isDown) {
-            this.body.setAngularVelocity(ANGULAR_VELOCITY);
+            this.body.setAngularVelocity(angularVelocity);
         }
 
         this.velocity.handleKeys(keys);

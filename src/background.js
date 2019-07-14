@@ -2,7 +2,6 @@ import Phaser from "phaser";
 
 export default function(config, scene) {
     let graphics = new Phaser.GameObjects.Graphics(scene);
-    scene.add.existing(graphics);
 
     let xMax = config.columns * config.lineSpacing;
     let yMax = config.rows * config.lineSpacing;
@@ -22,12 +21,13 @@ export default function(config, scene) {
 
     graphics.closePath();
     graphics.strokePath();
+    scene.add.existing(graphics);
+    scene.physics.world.setBounds(0, 0, xMax, yMax);
 
     let textureKey = "background";
     graphics.generateTexture(textureKey, xMax, yMax);
+    graphics.visible = false;
 
-    scene.physics.world.setBounds(0, 0, xMax, yMax);
 
-    let world = scene.physics.world;
-    scene.add.image(textureKey, world.width/2, world.height/2);
+    scene.add.image(xMax/2, yMax/2, textureKey);
 }
