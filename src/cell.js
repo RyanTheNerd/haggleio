@@ -4,14 +4,17 @@ import Velocity from './forwardVelocity';
 
 const FORWARD_ACCEL = 20;
 const ANGULAR_VELOCITY = 180;
-const BASE_SPEED = 600;
+const BASE_SPEED = 800;
 const BOOST_RATE = 10;
 const ANGULAR_DRAG = 500;
 
 
 
 export default class Cell extends Circle {
-    constructor(scene, x, y, radius, color) {
+    constructor(scene, side, radius, color) {
+        let bounds = scene.physics.world.bounds;
+        let x = bounds.width/2;
+        let y = bounds.height/2;
         super(scene, x, y, radius, color);
 
         this.setAngle(180);
@@ -38,7 +41,7 @@ export default class Cell extends Circle {
     handleCursorKeys(keys) {
         let angularVelocity = ANGULAR_VELOCITY;
         if(keys.shift.isDown) {
-            angularVelocity *= 1.50; 
+            angularVelocity += 1.50; 
         }
 
         if(keys.left.isDown) {

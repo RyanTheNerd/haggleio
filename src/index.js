@@ -4,6 +4,7 @@ import generateBackground from './background';
 import FoodGroup from './food';
 import Ball from "./ball";
 import Goal from "./goal";
+import Minimap from "./minimap";
 
 let mainScene = new Phaser.Scene('main');
 
@@ -36,9 +37,9 @@ mainScene.create = function()
 {
     this.backgroundColor = 0xcccccc;
     generateBackground({
-        columns: 100,
+        columns: 75,
         rows: 25,
-        lineSpacing: 100,
+        lineSpacing: 200,
         lineThickness: 5,
         lineColor: 0x0000cc,
         backgroundColor: this.backgroundColor,
@@ -47,9 +48,11 @@ mainScene.create = function()
 
     //this.physics.world.setBounds(0, 0, 100*100, 100*25);
 
-    this.cell = new Cell(this, 400, 300, 50, 0x6666ff);
+    this.cell = new Cell(this, 'left', 50, 0x6666ff);
     this.food = new FoodGroup(this, 25);
     this.ball = new Ball(this, 75, 0x00ffff);
+    this.minimap = new Minimap({scene: this});
+    this.minimap.init();
 
     let goalConfig = {
         width: 200,
