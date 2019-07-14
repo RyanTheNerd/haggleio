@@ -3,6 +3,7 @@ import Cell from './cell';
 import generateBackground from './background';
 import FoodGroup from './food';
 import Ball from "./ball";
+import Goal from "./goal";
 
 let mainScene = new Phaser.Scene('main');
 
@@ -33,19 +34,35 @@ mainScene.preload = function()
 
 mainScene.create = function()
 {
+    this.backgroundColor = 0xcccccc;
     generateBackground({
         columns: 100,
         rows: 25,
         lineSpacing: 100,
         lineThickness: 5,
-        lineColor: 0xff00ff,
+        lineColor: 0x0000cc,
+        backgroundColor: this.backgroundColor,
     },this);
+    this.cameras.main.setBackgroundColor(this.backgroundColor);
 
     //this.physics.world.setBounds(0, 0, 100*100, 100*25);
 
     this.cell = new Cell(this, 400, 300, 50, 0x6666ff);
     this.food = new FoodGroup(this, 25);
     this.ball = new Ball(this, 75, 0x00ffff);
+
+    let goalConfig = {
+        width: 200,
+        height: 500,
+        scene: this,
+        color: 0xff00ff,
+        alpha: 0.5,
+    };
+
+    this.goals = {
+        'left': new Goal(goalConfig, 'left'),
+        'right': new Goal(goalConfig, 'right'),
+    };
 
     this.keys = this.input.keyboard.addKeys({
         'up': Phaser.Input.Keyboard.KeyCodes.W,
@@ -67,7 +84,6 @@ mainScene.create = function()
 mainScene.update = function() 
 {
     let camera = this.cameras.main;
-    let center = new Phaser.Math.Vector2(camera.centerX, camera.centerY);
     this.cell.handleCursorKeys(this.keys);
     this.cell.update(this.keys);
     if(this.cell.velocity.speed > this.cell.velocity.baseSpeed) {

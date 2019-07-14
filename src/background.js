@@ -7,6 +7,8 @@ export default function(config, scene) {
     let yMax = config.rows * config.lineSpacing;
 
     graphics.lineStyle(config.lineThickness, config.lineColor, 1);
+    graphics.fillStyle(config.backgroundColor);
+    graphics.fillRect(0, 0, xMax, yMax);
     graphics.beginPath();
 
     for(let x = 0; x <= xMax; x += config.lineSpacing) {
