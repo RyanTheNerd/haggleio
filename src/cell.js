@@ -50,10 +50,23 @@ export default class Cell extends Circle {
         else if(keys.right.isDown) {
             this.body.setAngularVelocity(angularVelocity);
         }
+        else {
+            this.handlePointer(angularVelocity);
+        }
 
         this.velocity.handleKeys(keys);
         this.changeDirection();
 
+    }
+    handlePointer(angularVelocity, pointer = this.scene.pointer) {
+        let cam = this.scene.cameras.main;
+        let points = [cam.centerX, cam.centerY, pointer.x, pointer.y];
+        let distance = Phaser.Math.Distance.Between(...points);
+        let angle = Phaser.Math.Angle.Between(...points);
+        if(distance > 20) {
+            this.body.rotation = angle/Math.PI * 180;
+            this.velocity.moveForward();
+        }
     }
     update(keys) {
         this.velocity.update();

@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import Cell from './cell';
-import generateBackground from './background';
+import Background from './background';
 import FoodGroup from './food';
 import Ball from "./ball";
 import Goal from "./goal";
@@ -36,10 +36,10 @@ mainScene.preload = function()
 mainScene.create = function()
 {
     this.backgroundColor = 0xcccccc;
-    generateBackground({
-        columns: 75,
-        rows: 25,
-        lineSpacing: 200,
+    this.background = new Background({
+        columns: 32,
+        rows: 18,
+        lineSpacing: 256,
         lineThickness: 5,
         lineColor: 0x0000cc,
         backgroundColor: this.backgroundColor,
@@ -51,8 +51,13 @@ mainScene.create = function()
     this.cell = new Cell(this, 'left', 50, 0x6666ff);
     this.food = new FoodGroup(this, 25);
     this.ball = new Ball(this, 75, 0x00ffff);
-    this.minimap = new Minimap({scene: this});
-    this.minimap.init();
+    this.minimap = new Minimap({
+        scene: this,
+        width: 500,
+        padding: 10,
+        background: this.background,
+        corner: [0, 1],
+    });
 
     let goalConfig = {
         width: 200,
@@ -75,9 +80,10 @@ mainScene.create = function()
         'space': Phaser.Input.Keyboard.KeyCodes.SPACE,
         'shift': Phaser.Input.Keyboard.KeyCodes.SHIFT,
     });
-    this.cursor = new Phaser.Math.Vector2(0, 0);
+
+    this.pointer = new Phaser.Geom.Point(0, 0);
     this.input.on('pointermove', function(pointer) {
-        this.cursor.set(pointer.x, pointer.y);
+        this.pointer.setTo(pointer.x, pointer.y);
     }, this);
 
     this.cameras.main.startFollow(this.cell, true);
