@@ -4,7 +4,7 @@ import Velocity from './forwardVelocity';
 
 const FORWARD_ACCEL = 20;
 const ANGULAR_VELOCITY = 180;
-const BASE_SPEED = 800;
+const BASE_SPEED = 1000;
 const BOOST_RATE = 10;
 const ANGULAR_DRAG = 500;
 
@@ -51,22 +51,22 @@ export default class Cell extends Circle {
             this.body.setAngularVelocity(angularVelocity);
         }
         else {
-            this.handlePointer(angularVelocity);
+            this.handlePointer();
         }
 
         this.velocity.handleKeys(keys);
         this.changeDirection();
 
     }
-    handlePointer(angularVelocity, pointer = this.scene.pointer) {
+    handlePointer(pointer = this.scene.pointer) {
         let cam = this.scene.cameras.main;
         let points = [cam.centerX, cam.centerY, pointer.x, pointer.y];
         let distance = Phaser.Math.Distance.Between(...points);
         let angle = Phaser.Math.Angle.Between(...points);
-        if(distance > 20) {
-            this.body.rotation = angle/Math.PI * 180;
-            this.velocity.moveForward();
-        }
+        this.body.rotation = angle/Math.PI * 180;
+
+        let ratio = distance / (this.scene.cameras.main.centerX * 0.75);
+        this.velocity.moveForward(ratio);
     }
     update(keys) {
         this.velocity.update();

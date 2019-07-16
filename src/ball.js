@@ -10,7 +10,7 @@ export default class Ball extends Circle {
 
         this.body.setBounce(1, 1);
         this.body.setAllowDrag(true);
-        let drag = 50;
+        let drag = 250;
         this.body.setDrag(drag, drag);
         this.scene.physics.add.collider(this, this.scene.cell);
     }
