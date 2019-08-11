@@ -25,7 +25,7 @@ var config = {
             debug: true,
             fps: 60,
         }
-    }
+    },
 };
 
 
@@ -86,18 +86,26 @@ mainScene.create = function()
         this.pointer.setTo(pointer.x, pointer.y);
     }, this);
 
-    this.cameras.main.startFollow(this.cell, true);
+    let camera = this.cameras.main;
+
+    camera.startFollow(this.cell, true);
+    camera.update = function() {
+        let camera = this.cameras.main;
+        if(this.cell.body.speed > this.cell.baseSpeed) {
+            camera.zoomTo(Math.sqrt(this.cell.baseSpeed/this.cell.body.speed + 0.1), 100);
+        }
+        else {
+            camera.zoomTo(1);
+        }
+
+    }.bind(this);
 
 }
 
 mainScene.update = function() 
 {
     let camera = this.cameras.main;
-    this.cell.handleCursorKeys(this.keys);
     this.cell.update(this.keys);
-    if(this.cell.velocity.speed > this.cell.velocity.baseSpeed) {
-        camera.zoomTo(Math.sqrt(this.cell.velocity.baseSpeed/this.cell.velocity.speed) + 0.1, 100);
-    }
 }
 
 Phaser.Math.Distance.BetweenPoints = function(point1, point2) {

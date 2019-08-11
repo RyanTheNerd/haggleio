@@ -1,12 +1,11 @@
 import Phaser from "phaser";
 import Circle from "./circle";
-import Velocity from './forwardVelocity';
 
-const FORWARD_ACCEL = 20;
+const FORWARD_ACCEL = 500;
 const ANGULAR_VELOCITY = 180;
-const BASE_SPEED = 1000;
+const BASE_SPEED = 100;
+const MAX_SPEED = 150;
 const BOOST_RATE = 10;
-const ANGULAR_DRAG = 500;
 
 
 
@@ -19,22 +18,16 @@ export default class Cell extends Circle {
 
         this.setAngle(180);
         this.body.angularVelocity = 0;
-        this.body.angularDrag = ANGULAR_DRAG;
         this.body.setAllowRotation();
-        this.velocity = new Velocity({
-            baseSpeed: BASE_SPEED,
-            acceleration: FORWARD_ACCEL,
-            boostRate: BOOST_RATE,
-            boostPotential: 2000,
-            boostMaxPotential:2000,
-            velocity: 0,
-            drag: 5,
-        });
-    }
+        this.body.setMaxSpeed(MAX_SPEED);
+        this.baseSpeed = BASE_SPEED;
+        this.baseAccel = FORWARD_ACCEL;
+        this.boostRate = BOOST_RATE;
+   }
     changeDirection() {
         this.scene.physics.velocityFromAngle(
             this.body.rotation, 
-            this.velocity.value, 
+            this.body.speed, 
             this.body.velocity,
         );
     }
@@ -53,8 +46,23 @@ export default class Cell extends Circle {
         else {
             this.handlePointer();
         }
+        if(keys.up.isDown) {
+            // TODO: make 2d acceleration radial
+            this.acceleration = this.baseAccel;
+        }
+        else if(keys.down.isDown) {
+            this.acceleration = -this.baseAccel;
+        }
+        else {
+            this.acceleration = 0;
+        }
+        if(keys.shift.isDown) {
+            this.changeSpeed(-this.baseSpeed*0.05);
+        }
 
-        this.velocity.handleKeys(keys);
+        if(keys.space.isDown) {
+            this.boost();
+        }
         this.changeDirection();
 
     }
@@ -65,11 +73,9 @@ export default class Cell extends Circle {
         let angle = Phaser.Math.Angle.Between(...points);
         this.body.rotation = angle/Math.PI * 180;
 
-        let ratio = distance / (this.scene.cameras.main.centerX * 0.75);
-        this.velocity.moveForward(ratio);
+        let ratio = distance / (this.scene.cameras.main.centerX * 0.30);
     }
     update(keys) {
-        this.velocity.update();
         this.handleCursorKeys(keys);
     }
 }

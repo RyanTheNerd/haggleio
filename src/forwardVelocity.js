@@ -39,11 +39,8 @@ export default class ForwardVelocity {
             this.boost();
         }
     }
-    moveForward(ratio) {
-        if(ratio > 1) {
-            ratio = 1;
-        }
-        this.acceleration = this.baseAcceleration * ratio;
+    moveForward(multiplier = 1) {
+        this.acceleration = this.baseAcceleration * multiplier;
         this.update();
     }
     boost() {
