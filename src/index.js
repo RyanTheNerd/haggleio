@@ -47,6 +47,14 @@ mainScene.create = function()
     this.cameras.main.setBackgroundColor(this.backgroundColor);
 
     //this.physics.world.setBounds(0, 0, 100*100, 100*25);
+    this.keys = this.input.keyboard.addKeys({
+        'up': Phaser.Input.Keyboard.KeyCodes.W,
+        'down': Phaser.Input.Keyboard.KeyCodes.S,
+        'left': Phaser.Input.Keyboard.KeyCodes.A,
+        'right': Phaser.Input.Keyboard.KeyCodes.D,
+        'space': Phaser.Input.Keyboard.KeyCodes.SPACE,
+        'shift': Phaser.Input.Keyboard.KeyCodes.SHIFT,
+    });
 
     this.cell = new Cell(this, 'left', 50, 0x6666ff);
     this.food = new FoodGroup(this, 25);
@@ -61,7 +69,7 @@ mainScene.create = function()
 
     let goalConfig = {
         width: 200,
-        height: 500,
+        height: 1000,
         scene: this,
         color: 0xff00ff,
         alpha: 0.5,
@@ -72,14 +80,6 @@ mainScene.create = function()
         'right': new Goal(goalConfig, 'right'),
     };
 
-    this.keys = this.input.keyboard.addKeys({
-        'up': Phaser.Input.Keyboard.KeyCodes.W,
-        'down': Phaser.Input.Keyboard.KeyCodes.S,
-        'left': Phaser.Input.Keyboard.KeyCodes.A,
-        'right': Phaser.Input.Keyboard.KeyCodes.D,
-        'space': Phaser.Input.Keyboard.KeyCodes.SPACE,
-        'shift': Phaser.Input.Keyboard.KeyCodes.SHIFT,
-    });
 
     this.pointer = new Phaser.Geom.Point(0, 0);
     this.input.on('pointermove', function(pointer) {
@@ -104,7 +104,6 @@ mainScene.create = function()
 
 mainScene.update = function() 
 {
-    let camera = this.cameras.main;
     this.cell.update(this.keys);
 }
 

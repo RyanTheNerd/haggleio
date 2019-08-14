@@ -7,10 +7,11 @@ class Food extends Circle {
         this.scene = scene;
         this.scene.physics.world.enable(this);
         this.scene.add.existing(this);
+        this.energy = 300;
     }
     dieAndRespawn(bounds) {
         let rand = (bound) => Phaser.Math.Between(0, bound);
-        this.setPosition(rand(bounds.x), rand(bounds.y));
+        this.setPosition(rand(bounds.width), rand(bounds.height));
     }
 }
 export default class FoodGroup extends Phaser.GameObjects.Group {
@@ -29,13 +30,13 @@ export default class FoodGroup extends Phaser.GameObjects.Group {
 
         this.scene.physics.add.collider(this, this.scene.cell, function(food, cell) {
             food.dieAndRespawn(this.bounds);
-            cell.velocity.boostPotential += cell.velocity.boostRate * 50;
+            cell.increaseBoostPotential(food.energy);
             let camera = this.scene.cameras.main;
             
         }, null, this);
     }
     addFood() {
-        for(let i = 0; i < this.foodCount; i++) {
+        for(let i = 0; i <= this.foodCount; i++) {
             let x = Phaser.Math.Between(0, this.bounds.width);
             let y = Phaser.Math.Between(0, this.bounds.height);
             let color = Phaser.Display.Color.HSVToRGB(Math.random(), 1, 1).color;
