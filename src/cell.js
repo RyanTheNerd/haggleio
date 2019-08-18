@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import Circle from "./circle";
+import {PhysicsEnabledCircle as Circle} from "./utils";
 
 const FORWARD_ACCEL = 50;
 const ANGULAR_VELOCITY = 180;

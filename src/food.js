@@ -1,4 +1,4 @@
-import Circle from './circle';
+import {PhysicsEnabledCircle as Circle} from './utils';
 
 class Food extends Circle {
     constructor(scene, x, y, radius, color) {
