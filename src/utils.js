@@ -20,7 +20,7 @@ export function genCircleGraphics(scene, radius, color) {
 }
 
 export class Button extends Phaser.GameObjects.Text {
-    constructor(config, textConfig) {
+    constructor(config, content, handleClick) {
         let xPosition = config.hAlign ? config.scene.cameras.main.centerX : config.x;
         let yPosition = config.vAlign ? config.scene.cameras.main.centerY : config.y;
 
@@ -28,8 +28,8 @@ export class Button extends Phaser.GameObjects.Text {
             config.scene, 
             xPosition, 
             yPosition, 
-            config.content, 
-            textConfig,
+            content, 
+            config.textStyle,
         );
         this.setOrigin();
         this.scene.add.existing(this);
@@ -42,7 +42,7 @@ export class Button extends Phaser.GameObjects.Text {
         this.setInteractive();
         this.on('pointerover', () => this.setSecondaryColors());
         this.on('pointerout', () => this.setPrimaryColors());
-        this.on('pointerup', config.onclick);
+        this.on('pointerup', handleClick);
     }
     setColors(primary) {
         let foreground = primary ? this.colors.primary.foreground : this.colors.secondary.foreground;

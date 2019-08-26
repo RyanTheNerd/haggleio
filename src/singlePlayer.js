@@ -11,6 +11,9 @@ class SinglePlayerScene extends Phaser.Scene {
         super(config);
     }
     create() {
+        this.overlayObjects = [];
+
+        // Background
         this.backgroundColor = 0xcccccc;
         this.background = new Background({
             columns: 32,
@@ -20,28 +23,27 @@ class SinglePlayerScene extends Phaser.Scene {
             lineColor: 0x0000cc,
             backgroundColor: this.backgroundColor,
         },this);
-        this.cameras.main.setBackgroundColor(this.backgroundColor);
 
-        //this.physics.world.setBounds(0, 0, 100*100, 100*25);
-        this.keys = this.input.keyboard.addKeys({
-            'up': Phaser.Input.Keyboard.KeyCodes.W,
-            'down': Phaser.Input.Keyboard.KeyCodes.S,
-            'left': Phaser.Input.Keyboard.KeyCodes.A,
-            'right': Phaser.Input.Keyboard.KeyCodes.D,
-            'space': Phaser.Input.Keyboard.KeyCodes.SPACE,
-            'shift': Phaser.Input.Keyboard.KeyCodes.SHIFT,
+
+        // In Game Objects
+        let bounds = this.physics.world.bounds;
+        let cellx = bounds.width/2;
+        let celly = bounds.height/2;
+
+        this.cell = new Cell({
+            scene: this,
+            side: 'left',
+            position: new Phaser.Math.Vector2(cellx, celly),
+            color: 0x66f,
+            keys: ['W', 'D', 'A', 'D', 'SPACE', 'SHIFT'],
+            usePointer: true,
+            camera: 'fullscreen',
+            backgroundColor: this.backgroundColor,
         });
-
-        this.cell = new Cell(this, 'left', 50, 0x6666ff);
         this.food = new FoodGroup(this, 25);
         this.ball = new Ball(this, 75, 0x00ffff);
-        this.minimap = new Minimap({
-            scene: this,
-            width: 500,
-            padding: 10,
-            background: this.background,
-            corner: [0, 1],
-        });
+
+        // Goals
 
         let goalConfig = {
             width: 200,
@@ -56,28 +58,40 @@ class SinglePlayerScene extends Phaser.Scene {
             'right': new Goal(goalConfig, 'right'),
         };
 
+        this.inGameObjects = [
+            this.background.image, 
+            this.cell, 
+            this.food, 
+            this.ball, 
+            this.goals.left, 
+            this.goals.right,
+        ];
+
+        // Minimap
+        this.minimap = new Minimap({
+            scene: this,
+            width: 500,
+            padding: 10,
+            background: this.background,
+            corner: [0, 1],
+        });
+
+        this.cameras.main.ignore(this.inGameObjects);
+        this.cameras.cameras.push(this.cameras.cameras.shift());
 
         this.pointer = new Phaser.Geom.Point(0, 0);
         this.input.on('pointermove', function(pointer) {
             this.pointer.setTo(pointer.x, pointer.y);
         }, this);
-
-        let camera = this.cameras.main;
-        console.log(camera);
-
-        camera.startFollow(this.cell, true);
-        camera.update = function() {
-            let camera = this.cameras.main;
-            if(this.cell.body.speed > this.cell.baseSpeed) {
-                camera.zoomTo(Math.sqrt(this.cell.baseSpeed/this.cell.body.speed + 0.1), 100);
-            }
-            else {
-                camera.zoomTo(1);
-            }
-        }.bind(this);
+        this.cell.camera.ignore(this.overlayObjects);
     }
     update() {
-        this.cell.update(this.keys);
+        this.cell.update();
+    }
+    handleGoal(goal) {
+        this.cell.resetPosition();
+        this.ball.resetPosition();
+
     }
 }
 

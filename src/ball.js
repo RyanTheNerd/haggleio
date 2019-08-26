@@ -5,7 +5,9 @@ export default class Ball extends Circle {
         let bounds = scene.physics.world.bounds;
         x = (x == null) ? bounds.width/2 : x;
         y = (y == null) ? bounds.height/2 : y;
+        let startingPosition = new Phaser.Math.Vector2(x, y);
         super(scene, x, y, radius, color);
+        this.startingPosition = startingPosition;
         this.radius = radius;
 
         this.body.setBounce(1, 1);
@@ -13,5 +15,8 @@ export default class Ball extends Circle {
         let drag = 250;
         this.body.setDrag(drag, drag);
         this.scene.physics.add.collider(this, this.scene.cell);
+    }
+    resetPosition() {
+        this.body.reset(this.startingPosition.x, this.startingPosition.y);
     }
 }

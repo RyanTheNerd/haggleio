@@ -28,7 +28,7 @@ export default class FoodGroup extends Phaser.GameObjects.Group {
         scene.add.existing(this);
         this.scene.physics.world.enable(this);
 
-        this.scene.physics.add.collider(this, this.scene.cell, function(food, cell) {
+        this.scene.physics.add.overlap(this, this.scene.cell, function(food, cell) {
             food.dieAndRespawn(this.bounds);
             cell.increaseBoostPotential(food.energy);
             let camera = this.scene.cameras.main;

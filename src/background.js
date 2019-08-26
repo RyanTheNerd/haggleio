@@ -31,6 +31,6 @@ export default class Background extends Phaser.GameObjects.Graphics {
         this.visible = false;
 
 
-        scene.add.image(this.width/2, this.height/2, textureKey);
+        this.image = scene.add.image(this.width/2, this.height/2, textureKey);
     }
 }
