@@ -25,7 +25,13 @@ class LocalMultiplayerScene extends BaseScene {
                 
             }],
         };
+
         super(config);
+    }
+    create() {
+        super.create();
+        let viewport = this.cameras.main;
+        this.add.line(viewport.width/2, viewport.height/2, 0, 0, 0, viewport.height, 0x000000, 1);
     }
 }
 

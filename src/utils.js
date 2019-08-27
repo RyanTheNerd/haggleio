@@ -31,6 +31,7 @@ export class Button extends Phaser.GameObjects.Text {
             content, 
             config.textStyle,
         );
+        this.font = "'Work Sans'";
         this.setOrigin();
         this.scene.add.existing(this);
 

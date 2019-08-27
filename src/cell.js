@@ -2,7 +2,7 @@ import Phaser from "phaser";
 import {PhysicsEnabledCircle as Circle} from "./utils";
 
 const BASE_RADIUS = 50;
-const DISTANCE_FROM_CENTER = 500;
+const DISTANCE_FROM_CENTER = 1000;
 const BASE_CONST = 100;
 const ANGULAR_VELOCITY = BASE_CONST;
 const FORWARD_ACCEL = BASE_CONST * 20;
@@ -20,7 +20,7 @@ export default class Cell extends Circle {
         let center = new Phaser.Math.Vector2(config.scene.background.width/2, config.scene.background.height/2);
 
         let xOffset = config.side == 'left' ? -DISTANCE_FROM_CENTER : DISTANCE_FROM_CENTER;
-        super(config.scene, center.x + xOffset, center.y + Math.random()/100, BASE_RADIUS, config.color);
+        super(config.scene, center.x + xOffset, center.y + Math.random()/10, BASE_RADIUS, config.color);
         this.startingPosition = this.body.position.clone();
         this.usePointer = config.usePointer;
         this.side = config.side;
@@ -44,6 +44,7 @@ export default class Cell extends Circle {
         this.baseDrag = DRAG;
         this.body.setDrag(this.baseDrag, this.baseDrag);
         this.baseAngularVelocity = ANGULAR_VELOCITY;
+        this.acceleration = 0;
         this.maxAccelSpeed = MAX_ACCEL_SPEED;
         this.baseAccel = FORWARD_ACCEL;
         this.boostRate = BOOST_RATE;

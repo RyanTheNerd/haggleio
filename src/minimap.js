@@ -19,6 +19,7 @@ export default class MiniMap extends Phaser.Cameras.Scene2D.Camera {
 
         this.scene = config.scene;
 
+        this.ignore(this.scene.overlayObjects);
         this.scene.cameras.cameras.push(this);
         this.scene.cameras.addExisting(this);
         this.setZoom(ratio);

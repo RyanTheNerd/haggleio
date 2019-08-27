@@ -6,14 +6,15 @@ class TitleScreen extends Phaser.Scene {
         super(config);
     }
     preload() {
-        let buttonStyle = {
+        this.load.script('webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js');
+        this.buttonStyle = {
             scene: this,
             hAlign: true,
             vAlign: false,
             y: 50,
             textStyle: {
-                fontFamily: 'monospace',
                 fontSize: '23px',
+                fontFamily: "'Work Sans'",
                 padding: {x: 8, y: 8},
             },
             colors: {
@@ -37,7 +38,17 @@ class TitleScreen extends Phaser.Scene {
                 handleClick: function() {this.scene.start('localMultiplayer')}.bind(this),
             }
         ];
-        this.menu = new Menu(this.buttons, buttonStyle);
+    }
+    create() {
+        WebFont.load({
+            google: {
+                families: ['Work Sans']
+            },
+            active: function() {
+
+                this.menu = new Menu(this.buttons, this.buttonStyle);
+            }.bind(this)
+        })
     }
 
 }

@@ -3,6 +3,7 @@ import titleScreen from "./titleScreen";
 import singlePlayerScene from "./singlePlayer";
 import localMultiplayerScene from "./localMultiplayer";
 
+
 let config = {
     type: Phaser.AUTO,
     width: 800,

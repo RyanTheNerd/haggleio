@@ -8,24 +8,30 @@ export default class Goal extends Phaser.GameObjects.Rectangle {
 
         super(config.scene, x, y, config.width, config.height, config.color, config.alpha);
         this.side = side;
+        this.sideTitle = this.side == 'left' ? "Left" : "Right";
         this.score = 0;
-        this.scoreText = this.scene.add.text(0, 0, `${side}: ${this.score}`, {fontFamily: 'monospace', padding: 16});
-        this.scoreText.setBlendMode(4);
+        this.scoreText = this.scene.add.text(0, 0, `${this.sideTitle}: ${this.score}`, {
+                fontFamily: 'Work Sans',
+                fontSize: '24px',
+                padding: 8,
+        });
         let camera = this.scene.cameras.main;
+        this.scoreText.setShadow(2, 2, '#000', 1);
         this.scoreText.setPosition(side == 'left' ? 0 : camera.width, 0);
         this.scoreText.setOrigin(...(side == 'left' ? [0, 0] : [1, 0]));
-        this.side = side;
         this.ballOverlapping = false;
         this.winningText = this.scene.add.text(
             camera.width/2, 
             camera.height/2, 
-            `Point earned for ${this.side}`, 
+            `Point earned for ${this.sideTitle}`, 
             {
-                fontFamily: 'monospace',
+                fontFamily: 'Work Sans',
                 fontSize: '64px',
+                padding: 8,
             }
         );
         this.winningText.setOrigin(0.5, 0.5);
+        this.winningText.setShadow(4, 4);
         this.winningText.setVisible(false);
         config.scene.add.existing(this);
         config.scene.physics.world.enable(this);
@@ -35,7 +41,8 @@ export default class Goal extends Phaser.GameObjects.Rectangle {
             this.score++;
             this.scoreText.setText(`${side}: ${this.score}`);
             this.winningText.setVisible(true);
-            this.scene.handleGoal(goal);
+            this.scene.time.delayedCall(1000, function() {this.winningText.setVisible(false)}, null, this);
+            this.scene.handleGoal();
         }, null, this);
         this.scene.overlayObjects.push(this.scoreText, this.winningText);
     }
