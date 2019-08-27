@@ -20,7 +20,7 @@ export default class Cell extends Circle {
         let center = new Phaser.Math.Vector2(config.scene.background.width/2, config.scene.background.height/2);
 
         let xOffset = config.side == 'left' ? -DISTANCE_FROM_CENTER : DISTANCE_FROM_CENTER;
-        super(config.scene, center.x + xOffset, center.y, BASE_RADIUS, config.color);
+        super(config.scene, center.x + xOffset, center.y + Math.random()/100, BASE_RADIUS, config.color);
         this.startingPosition = this.body.position.clone();
         this.usePointer = config.usePointer;
         this.side = config.side;
