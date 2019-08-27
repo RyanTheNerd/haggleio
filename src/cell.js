@@ -2,13 +2,13 @@ import Phaser from "phaser";
 import {PhysicsEnabledCircle as Circle} from "./utils";
 
 const BASE_RADIUS = 50;
-
-const FORWARD_ACCEL = 2000;
-const ANGULAR_VELOCITY = 180;
-const BASE_SPEED = 1000;
-const MAX_BOOST_SPEED = 2000;
-const MAX_ACCEL_SPEED = 1200;
-const DRAG = 300;
+const DISTANCE_FROM_CENTER = 500;
+const BASE_CONST = 100;
+const ANGULAR_VELOCITY = BASE_CONST;
+const FORWARD_ACCEL = BASE_CONST * 20;
+const MAX_ACCEL_SPEED = BASE_CONST * 12;
+const MAX_BOOST_SPEED = MAX_ACCEL_SPEED * 1.5;
+const DRAG = FORWARD_ACCEL / 5;
 const BOOST_RATE = 100;
 const MAX_BOOST_POTENTIAL = 10000;
 const BOOST_POTENTIAL = MAX_BOOST_POTENTIAL;
@@ -17,11 +17,13 @@ const BOOST_POTENTIAL = MAX_BOOST_POTENTIAL;
 
 export default class Cell extends Circle {
     constructor(config) {
-        let pos = config.position;
+        let center = new Phaser.Math.Vector2(config.scene.background.width/2, config.scene.background.height/2);
 
-        super(config.scene, pos.x, pos.y, BASE_RADIUS, config.color);
-        this.startingPosition = pos;
+        let xOffset = config.side == 'left' ? -DISTANCE_FROM_CENTER : DISTANCE_FROM_CENTER;
+        super(config.scene, center.x + xOffset, center.y, BASE_RADIUS, config.color);
+        this.startingPosition = this.body.position.clone();
         this.usePointer = config.usePointer;
+        this.side = config.side;
 
         // Input
         let keys = config.keys;
@@ -35,13 +37,13 @@ export default class Cell extends Circle {
         });
 
         // Physics
-        this.setAngle(180);
+        this.setAngle(this.side == 'left' ? 360 : 180);
         this.body.angularVelocity = 0;
         this.body.setAllowRotation();
         this.body.setAllowDrag();
-        this.body.setDrag(DRAG, DRAG);
+        this.baseDrag = DRAG;
+        this.body.setDrag(this.baseDrag, this.baseDrag);
         this.baseAngularVelocity = ANGULAR_VELOCITY;
-        this.baseSpeed = BASE_SPEED;
         this.maxAccelSpeed = MAX_ACCEL_SPEED;
         this.baseAccel = FORWARD_ACCEL;
         this.boostRate = BOOST_RATE;
@@ -58,8 +60,8 @@ export default class Cell extends Circle {
             var camY = 0;
         }
         else if (config.camera == 'vSplit') {
-            var camWidth = viewPort.width / 2;
-            var camHeight = viewPort.height;
+            var camWidth = viewport.width / 2;
+            var camHeight = viewport.height;
             var camY = 0;
             var camX = config.side == 'left' ? 0 : camWidth;
         }
@@ -67,8 +69,8 @@ export default class Cell extends Circle {
         this.camera.setBackgroundColor(config.backgroundColor);
         this.camera.startFollow(this, true);
         this.camera.update = function() {
-            if(this.body.speed > this.baseSpeed) {
-                this.camera.zoomTo(this.baseSpeed / this.body.speed, 1000, 'Linear', true);
+            if(this.body.speed > this.maxAccelSpeed) {
+                this.camera.zoomTo(this.maxAccelSpeed / this.body.speed, 1000, 'Linear', true);
             }
             else {
                 this.camera.zoomTo(1, 1000, 'Linear', true);
@@ -80,6 +82,11 @@ export default class Cell extends Circle {
             this.body.rotation, 
             this.acceleration,
             this.body.acceleration,
+        );
+        this.scene.physics.velocityFromAngle(
+            this.body.rotation, 
+            this.body.speed,
+            this.body.velocity,
         );
         this.boost = 0;
     }
@@ -114,6 +121,12 @@ export default class Cell extends Circle {
         else if(this.keys.down.isDown) {
             this.acceleration = -this.baseAccel;
             this.boost *= -1;
+        }
+        if(this.keys.shift.isDown) {
+            this.body.setDrag(this.baseDrag*5, this.baseDrag*5);
+        }
+        else {
+            this.body.setDrag(this.baseDrag, this.baseDrag);
         }
         if(this.body.speed >= this.maxAccelSpeed) {
             if(Math.abs(this.boost) > 0 && this.body.speed <= this.maxBoostSpeed) {

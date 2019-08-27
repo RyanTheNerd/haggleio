@@ -7,7 +7,7 @@ class Food extends Circle {
         this.scene = scene;
         this.scene.physics.world.enable(this);
         this.scene.add.existing(this);
-        this.energy = 300;
+        this.energy = 2000;
     }
     dieAndRespawn(bounds) {
         let rand = (bound) => Phaser.Math.Between(0, bound);
@@ -28,7 +28,7 @@ export default class FoodGroup extends Phaser.GameObjects.Group {
         scene.add.existing(this);
         this.scene.physics.world.enable(this);
 
-        this.scene.physics.add.overlap(this, this.scene.cell, function(food, cell) {
+        this.scene.physics.add.overlap(this, this.scene.cells, function(food, cell) {
             food.dieAndRespawn(this.bounds);
             cell.increaseBoostPotential(food.energy);
             let camera = this.scene.cameras.main;

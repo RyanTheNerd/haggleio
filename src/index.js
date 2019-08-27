@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import titleScreen from "./titleScreen";
 import singlePlayerScene from "./singlePlayer";
+import localMultiplayerScene from "./localMultiplayer";
 
 let config = {
     type: Phaser.AUTO,
@@ -22,6 +23,7 @@ let config = {
 let game = new Phaser.Game(config);
 game.scene.add('titleScreen', titleScreen);
 game.scene.add('singlePlayer', singlePlayerScene);
+game.scene.add('localMultiplayer', localMultiplayerScene);
 
 game.scene.start('titleScreen');
 
