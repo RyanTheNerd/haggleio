@@ -36,6 +36,10 @@ class TitleScreen extends Phaser.Scene {
             {
                 content: "Local MultiPlayer",
                 handleClick: function() {this.scene.start('localMultiplayer')}.bind(this),
+            },
+            {
+                content: "Fullscreen",
+                handleClick: function() {this.scale.toggleFullscreen()}.bind(this),
             }
         ];
     }
@@ -48,7 +52,11 @@ class TitleScreen extends Phaser.Scene {
 
                 this.menu = new Menu(this.buttons, this.buttonStyle);
             }.bind(this)
-        })
+        });
+        this.scale.on('resize', function(gameSize, baseSize, displaySize, resolution) {
+            console.log('resize "this.scale.on"')
+            this.cameras.main.setSize(gameSize.width, gameSize.height);
+        }.bind(this));
     }
 
 }

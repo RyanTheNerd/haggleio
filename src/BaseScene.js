@@ -12,6 +12,9 @@ class BaseScene extends Phaser.Scene {
         super();
         this.config = config;
     }
+    preload() {
+        this.load.image('nitro', './assets/nitro.png');
+    }
     create() {
         this.overlayObjects = [];
 

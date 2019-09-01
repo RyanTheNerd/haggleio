@@ -13,7 +13,16 @@
         overflow: hidden;
       }
     </style>
+    
   </head>
   <body>
+ <script>
+   document.body.addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+      document.body.requestFullscreen().catch(function(err) {
+        console.log(err);
+      });  
+    }   });
+  </script>
   </body>
 </html>

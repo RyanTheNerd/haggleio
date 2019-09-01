@@ -41,7 +41,7 @@ export default class Goal extends Phaser.GameObjects.Rectangle {
             this.score++;
             this.scoreText.setText(`${side}: ${this.score}`);
             this.winningText.setVisible(true);
-            this.scene.time.delayedCall(1000, function() {this.winningText.setVisible(false)}, null, this);
+            this.scene.time.delayedCall(1000, function() {this.winningText.setVisible(false), this.ballOverlapping = false}, null, this);
             this.scene.handleGoal();
         }, null, this);
         this.scene.overlayObjects.push(this.scoreText, this.winningText);

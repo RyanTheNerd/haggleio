@@ -11,8 +11,6 @@ let config = {
     resolution: window.devicePixelRatio,
     scale: {
         mode: Phaser.Scale.RESIZE,
-        width: 800,
-        height:600,
     },
     physics: {
         default: 'arcade',
